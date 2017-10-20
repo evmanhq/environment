@@ -10,8 +10,7 @@ RUN yum update -y && yum install -y epel-release \
        postgresql-devel mysql-devel sqlite-devel \
     && yum clean -y all && rm -rf /var/cache/yum
 
-RUN gem install --no-document bundler foreman puma nokogiri ffi bcrypt \
-    mysql2 pg sqlite3
+RUN gem install --no-document bundler foreman
 
 RUN useradd -m -u 1001 -g 0 ruby
 
