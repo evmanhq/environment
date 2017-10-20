@@ -1,25 +1,33 @@
-FROM registry.gitlab.com/evman/stuart
+FROM centos
 
-RUN adduser --uid 1001 --gid 0 evman
+ADD mjelen.repo nginx.repo yarn.repo /etc/yum.repos.d/
 
-RUN curl -sL https://rpm.nodesource.com/setup_7.x | bash - && \
-    curl https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && \
-    curl -o /etc/yum.repos.d/bintray-mjelen-centos.repo  https://bintray.com/mjelen/centos/rpm && \
-    yum -y install gcc gcc-c++ bzip2 openssl-devel libyaml-devel libffi-devel \
-        readline-devel zlib-devel gdbm-devel ncurses-devel curl-devel postgresql-devel \
-        file ImageMagick-devel ImageMagick ruby git nodejs yarn && \
-    yum -y clean all && gem install bundler
+RUN yum update -y && yum install -y epel-release \
+    && yum install -y ruby nginx \
+       gcc gcc-c++ bzip2 file ImageMagick ruby git nodejs yarn \
+       ImageMagick-devel openssl-devel libyaml-devel libffi-devel \
+       readline-devel zlib-devel gdbm-devel ncurses-devel curl-devel \
+       postgresql-devel mysql-devel sqlite-devel \
+    && yum clean -y all && rm -rf /var/cache/yum
 
+RUN gem install --no-document bundler foreman puma nokogiri ffi bcrypt \
+    mysql2 pg sqlite3
+
+RUN useradd -m -u 1001 -g 0 ruby
+
+USER ruby
+
+RUN mkdir -p /home/ruby/nginx/temp /home/ruby/app/{log,public,tmp}
+
+ADD --chown=ruby:root assets.sh entrypoint.sh application.sh \
+    nginx.conf Procfile /home/ruby/
+
+WORKDIR /home/ruby/app
+
+ENV PATH $PATH:/home/ruby
 ENV RAILS_ENV="production"
 ENV NODE_ENV="production"
 
-ENV STUART_CHILD="/home/evman/evman.sh"
-ENV STUART_TARGET="http://localhost:3000/"
-
-USER evman
-
-WORKDIR /home/evman
-
-RUN mkdir /home/evman/{log,tmp,public}
+CMD /home/ruby/entrypoint.sh
 
 EXPOSE 8080
