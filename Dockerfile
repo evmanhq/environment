@@ -7,7 +7,7 @@ RUN yum update -y && yum install -y epel-release \
        gcc gcc-c++ bzip2 file ImageMagick ruby git nodejs yarn \
        ImageMagick-devel openssl-devel libyaml-devel libffi-devel \
        readline-devel zlib-devel gdbm-devel ncurses-devel curl-devel \
-       postgresql-devel mysql-devel sqlite-devel \
+       postgresql-devel mysql-devel sqlite-devel libidn-devel \
     && yum clean -y all && rm -rf /var/cache/yum
 
 RUN gem install --no-document bundler foreman
