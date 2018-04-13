@@ -1,6 +1,8 @@
 FROM centos
 
-ADD mjelen.repo nginx.repo yarn.repo /etc/yum.repos.d/
+ADD nginx.repo yarn.repo /etc/yum.repos.d/
+
+RUN curl -sLf 'https://dl.cloudsmith.io/public/mjelen/mjelen/cfg/install/config.rpm.txt?os=el&dist=7' > /etc/yum.repos.d/mjelen-mjelen.repo
 
 RUN yum update -y && yum install -y epel-release \
     && yum install -y ruby nginx \
