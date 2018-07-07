@@ -7,4 +7,4 @@ if [ -n "$PUMA_WORKERS" ]; then
 fi
 
 bundle exec rake db:migrate
-bundle exec puma $PUMA_WORKERS -t $PUMA_THREADS -e $RAILS_ENV -b tcp://127.0.0.1:3000 --state=/home/ruby/puma.state
+bundle exec puma $PUMA_WORKERS -t $PUMA_THREADS -e $RAILS_ENV -b tcp://127.0.0.1:3000 --state=puma.state

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-foreman start -d /home/ruby/app -f /home/ruby/Procfile
+foreman start -d /ruby/app -f /ruby/app/Procfile

@@ -1,3 +1,3 @@
-nginx: nginx -c /home/ruby/nginx.conf -p /home/ruby/
+nginx: nginx -c /ruby/nginx.conf -p /ruby/
 
-app: /home/ruby/application.sh
+app: /ruby/app/application.sh

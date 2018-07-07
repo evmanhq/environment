@@ -14,21 +14,24 @@ RUN yum update -y && yum install -y epel-release \
 
 RUN gem install --no-document bundler foreman
 
-RUN useradd -m -u 1001 -g 0 ruby
+RUN useradd -d /ruby -m -u 1001 -g 0 ruby
 
 USER ruby
 
-RUN mkdir -p /home/ruby/nginx/temp /home/ruby/app/{log,public,tmp}
+WORKDIR /ruby
 
-ADD --chown=ruby:root assets.sh entrypoint.sh application.sh \
-    nginx.conf Procfile /home/ruby/
+RUN mkdir -p ./nginx/temp ./app/{log,public,tmp} && chmod -R 777 .
 
-WORKDIR /home/ruby/app
+ADD --chown=ruby:root nginx.conf ./
+ADD --chown=ruby:root assets.sh entrypoint.sh application.sh Procfile ./app/
 
-ENV PATH $PATH:/home/ruby
+WORKDIR /ruby/app
+
+ENV HOME="/ruby"
+ENV PATH=$PATH:$HOME
 ENV RAILS_ENV="production"
 ENV NODE_ENV="production"
 
-CMD /home/ruby/entrypoint.sh
+CMD ./entrypoint.sh
 
 EXPOSE 8080
